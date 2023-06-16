@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+// const { Sequelize, Model, DataTypes } = require("sequelize");
 
 // // Option 1: Passing a connection URI
 // const sequelize = new Sequelize('sqlite::memory:') // Example for sqlite
@@ -11,23 +11,38 @@ const { Sequelize } = require('sequelize');
 // });
 
 // Option 3: Passing parameters separately (other dialects)
-const sequelize = new Sequelize('relationship_management', 'root', '1234567890', {
-  host: 'localhost',
-  dialect: 'mysql'
+// For Main branch
+// const sequelize = new Sequelize('relationship_management', 'root', '1234567890', {
+//   host: 'localhost',
+//   dialect: 'mysql'
+// });
+
+// For Second branch
+const { Sequelize, Model, DataTypes } = require("sequelize");
+
+const sequelize = new Sequelize("sql12626438", "sql12626438", "FPIdqsSDys", {
+  host: "sql12.freesqldatabase.com",
+  dialect: "mysql",
+  logging: false, // This will stop the connection message from console
 });
 
-try {
-   sequelize.authenticate();
-  console.log('Connection has been established successfully.');
-} catch (error) {
-  console.error('Unable to connect to the database:', error);
-}
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log("Connection has been established successfully.");
+  } catch (error) {
+    console.error("Unable to connect to the database:", error);
+  }
 
-// require('./contact')
-// require('./user')
+  const db = {};
 
-//  sequelize.sync will creat all defined table atonce 
-// sequelize.sync({ force: true });
-// console.log("All models were synchronized successfully.");
+  db.Sequelize = Sequelize;
+  db.sequelize = sequelize;
 
-module.exports = sequelize ;
+  db.contact = require("./contact")(sequelize, DataTypes);
+  db.user = require("./user")(sequelize, DataTypes, Model);
+
+  await sequelize.sync({ force: true });
+
+  module.exports = db;
+})();
