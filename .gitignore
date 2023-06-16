@@ -41,3 +41,4 @@ Thumbs.db
 # Ignore personal or user-specific files
 config.json
 secrets.yaml
+
